@@ -152,7 +152,42 @@ print(response.content)
 
 ## 1.数据库搭建
 
-### 读取PDF
+这里的 **数据库** 指的是用于存储embedding后的向量化文本的数据库，更具体一些，是集成在langchain中的Chroma向量数据库。而将常见文件类型 (.pdf, .md .txt, etc.) 中的文本内容转化成向量的流程如下所示：
+
+```mermaid
+graph LR
+    D([本地文件]) -->|读取文本| T([文本]);
+    T -->|分词| CT([分块文本]);
+    CT -->|Embedding| V([向量化文本]);
+    V -->|集成| VDB[(向量数据库)];
+```
+
+基于查询内容在数据库中检索相关信息的流程为：
+
+```mermaid
+graph LR
+    Q([查询]) -->|Embedding| VQ([向量化查询文本]);
+    
+    VQ --> VS{向量相似度}; 
+    V[(向量数据库)] --> VS; 
+    VS --> RTC([相关分块文本]);
+```
+
+令大模型根据检索出的信息对询问内容予以回答的流程为：
+
+```mermaid
+graph LR
+    RTC([相关分块文本]) -->|Prompt模板| P([Prompt]);
+    P -->|LLM| A([回答]);
+```
+
+
+
+## 附录
+
+### 数据库搭建
+
+#### 读取PDF
 
 使用`PyMuPDFLoader`类读取PDF文件。方式如下：
 
@@ -169,7 +204,7 @@ print(pages[1].page_content)
 
 `loader`通过将`PyMuPDFLoader`类实例化，得到了一个读取对象。对其使用`.load()`方法可以获得一个**列表**，该列表存储了对应PDF文件每一页的一个`langchain.schema.document.Document`类的实例化对象，我们所需的文本内容存储在该对象的`page_content`属性中。
 
-### 读取Markdown
+#### 读取Markdown
 
 整体与读取PDF类似，只不过使用的是`UnstructureMarkdownLoader`类。具体方式如下:
 
@@ -185,7 +220,7 @@ print(pages[0].page_content)
 
 通过`.load()`方法获取的列表中存储的还是`langchain.schema.document.Document`类的实例化对象，所以获取文本内容的方式与前文中提到的一致。
 
-### 文本分割
+#### 文本分割
 
 由于大模型通常有最大token数的限制，所以我们需要将过长的文本分割成更小的文本，以便模型处理。这里采用`RecursiveCharacterTextSplitter`进行文本分割，具体实现方式如下:
 
@@ -204,7 +239,7 @@ split_docs = text_splitter.split_documents(pages)
 
 这里`pages`是 **[上文](#读取pdf)** 中读取完成的文档内容。`chunk_size`指的是分割过后每个子块中包含的字符数，`chunk_overlap`指的是各个子块间共享的字符数。
 
-### 文本向量化
+#### 文本向量化
 
 将抽象的文本内容转换为计算机更容易处理的数字信息，这便是 **Embedding** 所实现的功能。通过Embedding，含义相近的词语将会被转化为相似度较高的向量（相似度可以使用**余弦相似度**来衡量）。这里提供两种实现embedding的方式：
 
