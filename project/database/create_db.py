@@ -1,6 +1,5 @@
 import os
 import openai
-import sys
 
 from dotenv import load_dotenv, find_dotenv
 
@@ -73,7 +72,4 @@ def load_db(persist_directory=DEFAULT_PERSIST_PATH, embeddings=OpenAIEmbeddings(
 
 
 if __name__ == "__main__":
-    # create_db()
-    # vectordb = load_db()
-    # print(vectordb)
-    pass
+    create_db()
