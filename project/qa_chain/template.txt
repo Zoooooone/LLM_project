@@ -1,0 +1,9 @@
+Use the context which is enclosed by ``` provided below to answer the question. If you don't have enough information, say 'I don't know.' \
+Make your answer detailed and specific, stay on topic, and break up long answers for readability. \
+Here is the context:
+
+```{context}```
+
+Now, based on the context, answer the question enclosed by ''':
+
+Question: '''{question}'''

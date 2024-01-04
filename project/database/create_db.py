@@ -40,7 +40,6 @@ def load_files(files):
 def split_text(docs):
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=200)
     split_docs = text_splitter.split_documents(docs)
-
     return split_docs
 
 
@@ -58,7 +57,6 @@ def create_db(path=DEFAULT_DB_PATH, persist_directory=DEFAULT_PERSIST_PATH, embe
         persist_directory=persist_directory
     )
     vectordb.persist()
-
     return vectordb
 
 
@@ -67,7 +65,6 @@ def load_db(persist_directory=DEFAULT_PERSIST_PATH, embeddings=OpenAIEmbeddings(
         persist_directory=persist_directory,
         embedding_function=embeddings
     )
-
     return vectordb
 
 
