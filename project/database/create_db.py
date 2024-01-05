@@ -43,6 +43,19 @@ def split_text(docs):
     return split_docs
 
 
+def create_db_info(
+        files=DEFAULT_DB_PATH,
+        embeddings="openai",
+        persist_directory=DEFAULT_PERSIST_PATH
+):
+    vectordb = create_db(
+        files=files,
+        persist_directory=persist_directory,
+        embeddings=embeddings
+    )
+    return ""
+
+
 def create_db(path=DEFAULT_DB_PATH, persist_directory=DEFAULT_PERSIST_PATH, embeddings=OpenAIEmbeddings()):
     if path is None:
         return "can't load empty file"

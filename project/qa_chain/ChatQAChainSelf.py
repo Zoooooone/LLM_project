@@ -50,7 +50,7 @@ class ChatQAChainSelf:
         if history_len > n:
             return self.history
         else:
-            return self.history[n - history_len:]
+            return self.history[-history_len:]
 
     def answer(
             self,
@@ -72,7 +72,7 @@ class ChatQAChainSelf:
         result = result["answer"]
         self.history.append((question, result))
 
-        return self.history
+        return result, self.history
 
 
 if __name__ == "__main__":
@@ -85,10 +85,10 @@ if __name__ == "__main__":
     q2 = "How to learn it?"
     q3 = "Who is Yao Ming?"
 
-    a1 = qa.answer(q1)[-1][-1]
-    a2 = qa.answer(q2)[-1][-1]
-    a3 = qa.answer(q3)[-1][-1]
-
+    a1 = qa.answer(q1)[0]
+    a2 = qa.answer(q2)[0]
+    a3 = qa.answer(q3)[0]
+    
     for q, a in zip([q1, q2, q3], [a1, a2, a3]):
         print(f"question: {q} \n")
         print(f"answer: {a} \n\n")
