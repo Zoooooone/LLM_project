@@ -50,8 +50,8 @@ def interface():
             with gr.Column(scale=1):
                 file = gr.File(
                     label="Please select the knowledge database directory",
-                    file_count="directory",
-                    file_types=[".txt", ".md", ".docx", ".pdf"]
+                    file_count="multiple",
+                    file_types=[".txt", ".md", ".pdf"]
                 )
                 with gr.Row():
                     init_db = gr.Button("knowledge database embedding")

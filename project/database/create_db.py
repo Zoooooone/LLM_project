@@ -3,6 +3,8 @@ import openai
 
 from dotenv import load_dotenv, find_dotenv
 
+from ..embedding.call_embedding import get_embedding
+
 from langchain.vectorstores import Chroma
 from langchain.document_loaders import PyMuPDFLoader, UnstructuredMarkdownLoader, UnstructuredFileLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -14,8 +16,15 @@ DEFAULT_DB_PATH = "data_base/knowledge_db/"
 DEFAULT_PERSIST_PATH = "data_base/vector_db/chroma/"
 
 
-def get_files(path=DEFAULT_DB_PATH):
-    files = [path + f for f in os.listdir(path)]
+def get_files(paths=DEFAULT_DB_PATH):
+    files = []
+    for path in paths:
+        if os.path.isdir(path):
+            for root, dir, filenames in os.walk(path):
+                for filename in filenames:
+                    files.append(os.path.join(root, filename))
+        elif os.path.isfile(path):
+            files.append(path)
     return files
 
 
@@ -44,25 +53,34 @@ def split_text(docs):
 
 
 def create_db_info(
-        files=DEFAULT_DB_PATH,
+        paths=DEFAULT_DB_PATH,
         embeddings="openai",
         persist_directory=DEFAULT_PERSIST_PATH
 ):
-    vectordb = create_db(
-        files=files,
+    create_db(
+        paths=paths,
         persist_directory=persist_directory,
         embeddings=embeddings
     )
-    return ""
+    return "Embedding completed!"
 
 
-def create_db(path=DEFAULT_DB_PATH, persist_directory=DEFAULT_PERSIST_PATH, embeddings=OpenAIEmbeddings()):
-    if path is None:
+def create_db(
+        paths: list[str] = DEFAULT_DB_PATH, 
+        persist_directory: str = DEFAULT_PERSIST_PATH, 
+        embeddings: str = "openai"
+):
+    if paths is None:
         return "can't load empty file"
+    if type(paths) is not list:
+        paths = [paths]
     
-    files = get_files(path)
+    files = get_files(paths)
     docs = load_files(files)
     split_docs = split_text(docs)
+
+    if type(embeddings) is str:
+        embeddings = get_embedding(embedding=embeddings)
 
     vectordb = Chroma.from_documents(
         documents=split_docs,
@@ -82,4 +100,5 @@ def load_db(persist_directory=DEFAULT_PERSIST_PATH, embeddings=OpenAIEmbeddings(
 
 
 if __name__ == "__main__":
-    create_db()
+    msg = create_db_info()
+    print(msg)
