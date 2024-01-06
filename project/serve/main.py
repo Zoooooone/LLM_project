@@ -1,6 +1,6 @@
 import gradio as gr
 
-from .model_center import ModelCenter, respond
+from .model_center import ModelCenter
 from ..database.create_db import create_db_info
 
 LLM_MODEL_DICT = {
@@ -9,6 +9,10 @@ LLM_MODEL_DICT = {
 LLM_MODEL_LIST = sum(list(LLM_MODEL_DICT.values()), [])
 EMBEDDING_MODEL_LIST = ["openai"]
 INIT_EMBEDDING_MODEL = "openai"
+
+
+def return_2():
+    return [[2]]
 
 
 def interface():
@@ -31,7 +35,7 @@ def interface():
                     show_share_button=True,
                     # avatar_images
                 )
-                question = gr.Textbox(label="Question")
+                msg = gr.Textbox(label="Prompt")
 
                 with gr.Row():
                     db_with_history_btn = gr.Button("Chat database with history")
@@ -96,37 +100,35 @@ def interface():
             init_db.click(
                 create_db_info,
                 inputs=[file, embeddings],
-                outputs=[question]
+                outputs=[msg]
             )
 
             # chat_qa_chain
             db_with_history_btn.click(
                 model_center.chat_qa_chain_self_answer,
-                inputs=[question, chatbot, llm, embeddings, temperature, top_k, history_len],
-                outputs=[question, chatbot]
+                inputs=[msg, chatbot, llm, embeddings, temperature, top_k, history_len],
+                outputs=[msg, chatbot]
             )
 
             # qa_chain
             db_without_history_btn.click(
                 model_center.qa_chain_self_answer,
-                inputs=[question, chatbot, llm, embeddings, temperature, top_k],
-                outputs=[question, chatbot]
+                inputs=[msg, chatbot, llm, embeddings, temperature, top_k],
+                outputs=[msg, chatbot]
             )
 
             # respond
             llm_btn.click(
-                respond,
-                inputs=[question, chatbot, llm, history_len, temperature],
-                outputs=[question, chatbot],
-                show_progress="minimal"
+                model_center.respond_self_answer,
+                inputs=[msg, chatbot, llm, temperature, history_len],
+                outputs=[msg, chatbot]
             )
 
             # submit
-            question.submit(
-                respond,
-                inputs=[question, chatbot, llm, history_len, temperature],
-                outputs=[question, chatbot],
-                show_progress="hidden"
+            msg.submit(
+                model_center.respond_self_answer,
+                inputs=[msg, chatbot, llm, temperature, history_len],
+                outputs=[msg, chatbot]
             )
 
             # clear history
