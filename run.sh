@@ -1,1 +1,1 @@
-python3.10 -m project.serve.interface
+python -m project.serve.main

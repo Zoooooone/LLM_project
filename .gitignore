@@ -2,8 +2,10 @@ __pycache__/
 practice
 .env
 
-*.pdf
-*.md
 *.bin
 *.sqlite3
 *.pickle
+
+data_base/knowledge_db/*.md
+data_base/knowledge_db/*.pdf
+data_base/knowledge_db/*.txt
