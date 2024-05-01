@@ -38,3 +38,31 @@ This project refers to this **[tutorial](https://github.com/logan-zou/Chat_with_
     ```bash
     python -m project.serve.main
     ```
+
+# Development
+
+## Architecture
+
+This project is based on **[Langchain](https://www.langchain.com/)**, a framework designed to simplify the creation of applications using LLMs. This project's architecture mainly consists of these parts:
+
+- **LLM Layer**: Encapsulates API calls to OpenAI APIs.
+- **Data Layer**: Includes source data of the personal knowledge database and embedding API.
+- **Database Layer**: A vector database built on the source data, used **[Chroma](https://docs.trychroma.com/)**.
+- **Application Layer**: The top-level encapsulation of the core features. Further, encapsulated the retrieval Q&A chain provided by Langchain.
+- **Service Layer**: Implementation of service access for this project: a demo with **[Gradio](https://www.gradio.app/)**.
+
+<p align="center">
+    <img src="/img/architecture.png" alt="Architecture of this project">
+</p>
+
+## More details
+
+Following diagrams illustrates the interaction flow between the user and this assistant.
+
+<p align="center">
+    <img src="/img/flowchart.png" alt="Architecture of this project">
+</p>
+
+<p align="center">
+    <img src="/img/flowchart_2.png" alt="Architecture of this project">
+</p>
