@@ -11,10 +11,6 @@ EMBEDDING_MODEL_LIST = ["openai"]
 INIT_EMBEDDING_MODEL = "openai"
 
 
-def return_2():
-    return [[2]]
-
-
 def interface():
     model_center = ModelCenter()
     block = gr.Blocks()

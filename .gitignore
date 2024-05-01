@@ -9,3 +9,5 @@ practice
 data_base/knowledge_db/*.md
 data_base/knowledge_db/*.pdf
 data_base/knowledge_db/*.txt
+
+myenv/
